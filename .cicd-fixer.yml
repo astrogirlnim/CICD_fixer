@@ -1,0 +1,139 @@
+# CI Optimizer Configuration File
+# Place this file in your repository root to configure CI/CD Fixer behavior
+
+# General settings
+general:
+  # Enable or disable specific CI platforms
+  platforms:
+    github_actions: true
+    gitlab_ci: false  # Future support
+  
+  # Default mode: 'suggest' or 'autofix'
+  mode: suggest
+  
+  # Enable colored output
+  color_output: true
+  
+  # Verbosity level: 0 (quiet), 1 (normal), 2 (verbose), 3 (debug)
+  verbosity: 1
+
+# File handling
+files:
+  # Paths to scan for workflow files
+  workflow_paths:
+    - .github/workflows/
+    - .gitlab-ci.yml  # For future GitLab support
+  
+  # Exclude patterns (glob)
+  exclude:
+    - "**/test-*.yml"
+    - "**/experimental-*.yml"
+  
+  # Maximum file size to process (in KB)
+  max_file_size: 500
+
+# External services
+external_services:
+  # Enable LLM-powered suggestions
+  use_llm: true
+  
+  # LLM provider settings
+  llm:
+    provider: openai  # Options: openai, anthropic, local
+    model: gpt-4
+    api_key_env: OPENAI_API_KEY  # Environment variable name
+    max_tokens: 2000
+    temperature: 0.3
+  
+  # Privacy settings
+  privacy:
+    # Redact secrets before sending to external services
+    redact_secrets: true
+    # Never send these patterns to external services
+    sensitive_patterns:
+      - "secrets\\..*"
+      - ".*_TOKEN"
+      - ".*_KEY"
+      - ".*_PASSWORD"
+
+# Optimization settings
+optimizations:
+  # YAML fixes
+  yaml:
+    fix_indentation: true
+    fix_invalid_keys: true
+    validate_schema: true
+  
+  # Caching optimization
+  caching:
+    suggest_restore_keys: true
+    optimize_paths: true
+    add_cache_timing: true
+  
+  # Job parallelization
+  parallelization:
+    analyze_dependencies: true
+    suggest_parallel_jobs: true
+    respect_explicit_deps: true
+  
+  # Step reordering
+  step_reordering:
+    optimize_for_cache: true
+    group_similar_steps: true
+    preserve_logical_order: true
+
+# Output settings
+output:
+  # Show diffs for suggested changes
+  show_diffs: true
+  
+  # Diff format: 'unified' or 'github'
+  diff_format: unified
+  
+  # Include explanations for each suggestion
+  include_explanations: true
+  
+  # Maximum number of issues to report
+  max_issues: 50
+
+# Auto-fix settings
+autofix:
+  # Create backup files before applying fixes
+  create_backups: true
+  
+  # Backup file suffix
+  backup_suffix: .bak
+  
+  # Dry run mode (show what would be fixed without applying)
+  dry_run: false
+  
+  # Ask for confirmation before each fix
+  interactive: true
+
+# Performance settings
+performance:
+  # Maximum processing time per file (seconds)
+  timeout_per_file: 30
+  
+  # Enable parallel processing
+  parallel_processing: true
+  
+  # Number of worker threads
+  max_workers: 4
+
+# Reporting
+reporting:
+  # Exit codes
+  exit_codes:
+    success: 0
+    issues_found: 1
+    fatal_error: 2
+  
+  # Summary format
+  show_summary: true
+  
+  # Metrics to track
+  metrics:
+    - pipeline_duration
+    - cache_hit_rate
+    - parallel_efficiency 
