@@ -72,13 +72,19 @@ def main(
         False,
         "--autofix",
         "-a",
-        help="Automatically apply fixes (default is suggestion mode)",
+        help="Automatically apply fixes (interactive by default, use --yes for non-interactive)",
     ),
     dry_run: bool = typer.Option(
         False,
         "--dry-run",
         "-d",
         help="Show what would be changed without applying fixes",
+    ),
+    yes: bool = typer.Option(
+        False,
+        "--yes",
+        "-y",
+        help="Auto-confirm all fixes (non-interactive mode)",
     ),
     # Configuration options
     config: Optional[Path] = typer.Option(
@@ -189,6 +195,8 @@ def main(
             config_obj.general.mode = "autofix"
         if dry_run:
             config_obj.autofix.dry_run = True
+        if yes:
+            config_obj.autofix.interactive = False
         if no_cloud:
             config_obj.external_services.use_llm = False
         if max_issues:
@@ -222,10 +230,10 @@ def main(
         issues_found = agent.run()
         
         # Determine exit code
-        if issues_found and exit_on_issues:
+        if issues_found > 0 and exit_on_issues:
             logger.info(f"⚠️  Found {issues_found} issue(s)")
             handle_exit(ExitCode.ISSUES_FOUND)
-        elif issues_found:
+        elif issues_found > 0:
             logger.info(f"✅ Analysis complete. Found {issues_found} issue(s)")
             handle_exit(ExitCode.SUCCESS)
         else:

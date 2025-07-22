@@ -228,14 +228,36 @@ def filter_by_platform(
     filtered_files = []
     
     for wf in workflow_files:
-        # Determine platform based on file path
+        # Determine platform based on file path and content
         if platforms.get("github_actions", True):
-            if ".github/workflows" in str(wf.path):
+            # Check if it's in a GitHub Actions path
+            if ".github/workflows" in str(wf.path) or ".github\\workflows" in str(wf.path):
                 filtered_files.append(wf)
+                continue
+            
+            # Also check file content if it's loaded
+            if wf.content:
+                # Basic check for GitHub Actions structure
+                if "on:" in wf.content and "jobs:" in wf.content:
+                    filtered_files.append(wf)
+                    continue
+            elif wf.path.suffix in ['.yml', '.yaml']:
+                # If content not loaded yet, include YAML files when specific file is provided
+                # The YAML parser will determine the actual platform later
+                filtered_files.append(wf)
+                continue
         
         if platforms.get("gitlab_ci", False):
+            # Check standard GitLab CI file names
             if wf.path.name in [".gitlab-ci.yml", ".gitlab-ci.yaml"]:
                 filtered_files.append(wf)
+                continue
+            
+            # Check content for GitLab CI structure
+            if wf.content and ("stages:" in wf.content or "image:" in wf.content):
+                # Don't add if already added as GitHub Actions
+                if wf not in filtered_files:
+                    filtered_files.append(wf)
         
         # Add more platform checks here as needed
     

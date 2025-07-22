@@ -98,33 +98,22 @@ class AutofixHandler:
         successful = 0
         failed = 0
         
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-            console=self.console,
-            transient=True
-        ) as progress:
-            task = progress.add_task("Applying fixes...", total=len(fixes))
+        for i, fix in enumerate(fixes):
+            # Apply single fix
+            result = self._apply_single_fix(fix, workflow_files)
             
-            for i, fix in enumerate(fixes):
-                # Apply single fix
-                result = self._apply_single_fix(fix, workflow_files)
-                
-                if result.success:
-                    successful += 1
-                    if result.diff:
-                        # Update workflow_files with new content
-                        workflow_files[str(result.file_path)] = self._apply_diff_to_content(
-                            workflow_files.get(str(result.file_path), ""),
-                            result.diff
-                        )
-                else:
-                    failed += 1
-                
-                self.applied_fixes.append(result)
-                progress.update(task, advance=1)
+            if result.success:
+                successful += 1
+                if result.diff:
+                    # Update workflow_files with new content
+                    workflow_files[str(result.file_path)] = self._apply_diff_to_content(
+                        workflow_files.get(str(result.file_path), ""),
+                        result.diff
+                    )
+            else:
+                failed += 1
+            
+            self.applied_fixes.append(result)
         
         # Show summary
         self._display_summary(successful, failed)
