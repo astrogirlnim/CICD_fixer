@@ -1,42 +1,49 @@
 # CI/CD Fixer 🔧
 
-An AI-powered CLI tool that automatically analyzes and optimizes CI/CD pipeline configurations, starting with GitHub Actions. Make your pipelines faster, more reliable, and easier to maintain.
+A rule-based CLI tool that automatically analyzes and optimizes CI/CD pipeline configurations, starting with GitHub Actions. Make your pipelines faster, more reliable, and easier to maintain.
 
 ## Features ✨
 
 - **🔍 Auto-detect Issues**: Finds YAML syntax errors, schema violations, and inefficiencies
 - **⚡ Performance Optimization**: Parallelizes jobs, optimizes caching, and reorders steps
-- **🤖 AI-Powered Suggestions**: Uses LLMs to provide intelligent optimization recommendations
-- **🛡️ Privacy-First**: Redacts secrets before any external API calls
+- **🧠 Smart Pattern Matching**: Uses comprehensive rules to identify optimization opportunities
+- **🛡️ Privacy-First**: Redacts secrets before any external processing
 - **🎯 Zero Config**: Works out of the box with sensible defaults
 - **🔄 Multiple Modes**: Choose between suggestion mode or auto-fix mode
+- **🚀 Ready for AI Enhancement**: Configurable for future LLM integration
 
 ## Installation 📦
 
 ```bash
-# Install from PyPI (coming soon)
-pip install cicd-fixer
-
-# Install from source
+# Current: Install from source (PyPI coming soon)
 git clone https://github.com/yourusername/cicd-fixer.git
 cd cicd-fixer
-pip install -e .
+pip install -r requirements.txt
+
+# Future: Install from PyPI
+pip install cicd-fixer  # Coming soon
 ```
 
 ## Quick Start 🚀
 
 ```bash
-# Analyze your CI workflows (suggestion mode)
-cicd-fixer
+# Navigate to the ci-agent directory
+cd ci-agent
 
-# Auto-fix issues
-cicd-fixer --autofix
+# Analyze your CI workflows (suggestion mode)
+python -m cli.cli_entry main
+
+# Auto-fix issues (non-interactive)
+python -m cli.cli_entry main --autofix --yes
 
 # Check specific workflow file
-cicd-fixer --file .github/workflows/ci.yml
+python -m cli.cli_entry main --file .github/workflows/ci.yml
 
 # Dry run to see what would be changed
-cicd-fixer --autofix --dry-run
+python -m cli.cli_entry main --autofix --dry-run
+
+# Future simplified commands (after packaging):
+# cicd-fixer, cicd-fixer --autofix, etc.
 ```
 
 ## Configuration ⚙️
@@ -65,24 +72,38 @@ optimizations:
 
 ## Usage Examples 💡
 
-### Local Development
+### Local Development (Current)
 
 ```bash
-# Add to git hooks for automatic checking
-cicd-fixer install-hooks
+# Run before committing (from ci-agent directory)
+python -m cli.cli_entry main --exit-on-issues
 
-# Run before committing
-cicd-fixer check
+# Auto-fix with confirmation
+python -m cli.cli_entry main --autofix
+
+# Non-interactive mode for scripts
+python -m cli.cli_entry main --autofix --yes
 ```
 
-### CI Pipeline Integration
+### CI Pipeline Integration (Current)
 
 ```yaml
 # .github/workflows/ci.yml
 - name: Check CI Configuration
   run: |
-    pip install cicd-fixer
-    cicd-fixer --exit-on-issues
+    cd ci-agent
+    python -m cli.cli_entry main --exit-on-issues --no-color
+```
+
+### Future Enhanced Usage (Planned)
+
+```bash
+# Git hooks integration (coming soon)
+cicd-fixer install-hooks
+cicd-fixer check
+
+# Simplified commands after packaging
+cicd-fixer --autofix
 ```
 
 ## Supported Optimizations 🛠️
@@ -106,10 +127,11 @@ cicd-fixer check
 
 ## Privacy & Security 🔒
 
-- All secrets are redacted before external API calls
-- Use `--no-cloud` flag to disable all external calls
-- Sensitive patterns are never sent to LLMs
-- Local processing by default
+- All secrets are redacted before any external processing
+- Use `--no-cloud` flag to disable future external integrations
+- Sensitive patterns are detected and protected
+- 100% local processing (no external calls in current version)
+- Ready for secure LLM integration when implemented
 
 ## Development 👩‍💻
 
@@ -141,12 +163,25 @@ ci-agent/
 
 ## Roadmap 🗺️
 
-- [x] MVP: GitHub Actions support
+### ✅ Completed (MVP)
+- [x] GitHub Actions YAML analysis and optimization
+- [x] Rule-based issue detection and fixing
+- [x] CLI interface with suggestion and autofix modes
+- [x] Configuration management and secret redaction
+
+### 🚧 In Progress (Alpha)
+- [ ] PyPI packaging and simplified CLI commands
+- [ ] Git hooks integration (`install-hooks`, `check` commands)
+- [ ] AI/LLM integration for enhanced suggestions
+- [ ] Performance benchmarking and optimization
+
+### 🔮 Future (Beta & Beyond)
 - [ ] GitLab CI support
 - [ ] CircleCI support
 - [ ] Jenkins support
 - [ ] Web UI dashboard
 - [ ] VS Code extension
+- [ ] Real-time optimization recommendations
 
 ## Contributing 🤝
 
