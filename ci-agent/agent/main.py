@@ -353,14 +353,23 @@ class CIOptimizerAgent:
             parsed_data = self.parsed_workflows.get(file_path, {})
             platform = parsed_data.get("platform", "github_actions")
             
+            # Group YAML syntax issues by fix type to avoid duplicates
+            yaml_fix_types = set()
+            
             # Process different types of issues
             for issue in file_issues:
                 fix = None
                 issue_type = issue["type"]
                 
-                # YAML syntax fixes
+                # YAML syntax fixes (consolidate by type)
                 if issue_type == "syntax":
-                    fix = self._generate_yaml_fix(issue, content, file_path)
+                    yaml_fix = self._generate_yaml_fix(issue, content, file_path)
+                    if yaml_fix:
+                        fix_type = yaml_fix["type"]
+                        # Only add if we haven't already added this fix type for this file
+                        if fix_type not in yaml_fix_types:
+                            yaml_fix_types.add(fix_type)
+                            fix = yaml_fix
                 
                 # Caching fixes
                 elif issue_type == "caching" and issue.get("cache_config"):

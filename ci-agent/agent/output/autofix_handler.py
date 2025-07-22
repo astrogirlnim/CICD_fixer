@@ -104,12 +104,9 @@ class AutofixHandler:
             
             if result.success:
                 successful += 1
-                if result.diff:
-                    # Update workflow_files with new content
-                    workflow_files[str(result.file_path)] = self._apply_diff_to_content(
-                        workflow_files.get(str(result.file_path), ""),
-                        result.diff
-                    )
+                # Update workflow_files with the actual fixed content
+                if result.file_path.exists():
+                    workflow_files[str(result.file_path)] = result.file_path.read_text()
             else:
                 failed += 1
             

@@ -8,8 +8,8 @@ on:
 
 jobs:
   test:
-    run-on: ubuntu-latest	# Typo: should be runs-on
-    need: [build]  # Typo: should be needs
+    runs-on: ubuntu-latest  # Typo: should be runs-on
+    needs: [build]  # Typo: should be needs
     steps:
       - name: Install dependencies
         run: npm install
