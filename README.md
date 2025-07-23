@@ -190,13 +190,6 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## License 📄
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support 💬
-
-- 📧 Email: support@cicd-fixer.dev
-- 💬 Discord: [Join our community](https://discord.gg/cicd-fixer)
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/cicd-fixer/issues)
-
 ---
 
-Made with ❤️ by the CI Optimizer Team 
+Made with ❤️ by N
